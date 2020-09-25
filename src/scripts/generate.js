@@ -33,11 +33,17 @@ function generateMainPage(){
 };
 
 function generateBookmarkItem(bookmark){
-    let bookmarkTitle = `<button class ="item" type="submit"id="expand-button">${bookmark.title}</button>`;
-    const bookmarkItem = `
+    let bookmarkTitle = `<span class ="item" >${bookmark.title}</span>`;
+    const bookmarkItem = `<li><div class="top-row"
     <div class="ind-bookmark group" data-item-id="${bookmark.id}">
       ${bookmarkTitle}
       <p class = "item">${bookmark.rating}</p>
+      </div>
+      </div>
+      <div class="bottom-row hidden">
+      <a href ="${bookmark.url}">Visit Site</a>
+      <p>${bookmark.desc}</p>
+      <button type = "submit id="delete">Delete</button>
       </div>
     </li>`;
     return bookmarkItem;
@@ -67,59 +73,32 @@ function generateAddPage(){
 <div>
 <form id ="add-bookmark-form">
   <label for ="url">Url Here</label>
-  <input type ="text" id="url" name="url"placeholder="put url here">
+  <input type ="text" id="url" name="url" placeholder="put url here" required>
   <label for = "name">Name</label>
-  <input type="text" placeholder="Nickname" name="name" id="name">
+  <input type="text" placeholder="Nickname" name="name" id="name" required>
   <label for = "rating">Rating</label>
   <input type="text" placeholder="rating 1-5" name="rating" id="rating">
+  <label for="desc">Description</label>
+  <textarea name="desc" rows="4"></textarea>
   <button type ="submit">Add Bookmark</button>
 </form>
 </div>`
     return addPage;
 }
 
-function generateExpandedPage(bookmark){
-    const expandedPage =`<h1>
-    My Bookmarks
-</h1>
-<div class ="group">
-<button type = "submit" class="add-bookmark">New</button>
-<form>
-<select name="filter" id="filter-button">
-    <option id="filter1">Show 1+</option>
-    <option id="filter2">Show 2+</option>
-    <option id="filter3">Show 3+</option>
-    <option id="filter4">Show 4+</option>
-    <option id="filter5">Show 5</option>
-</select>
-<input type="submit" value="Filter">
-</form>
-</div>
-<div>
-<form class ="add-bookmark-form">
-  <label for ="url">Url Here</label>
-  <input type ="text" id="url" name="url"placeholder="put url here">
-  <label for = "name">Name</label>
-  <input type="text" placeholder="Nickname" name="name" id="name">
-  <button type ="submit">Add Bookmark</button>
-</form>
-</div>
-<div>
-    <h3>
-        ${bookmark.title}
-    </h3>
-    <button type ="submit" id="site-link">Visit Site</button>
-    <p>
-        ${bookmark.rating}
-    </p>
 
-    <p>
-        ${bookmark.desc}
-    </p>
-</div>
-`
-    return expandedPage;
+function getIdFromElement(item){
+    return $(item)
+        .closest('ind-bookmark group')
+        .data('data-item-id')
 }
+
+
+function handleExpandButton(){
+    $('main').on('click', 'li',function(e){
+        $(this).children('.bottom-row').toggleClass('hidden');
+    });
+};
 
 function handleBookmarkSubmit(){
     $('main').on('submit', '#add-bookmark-form', function(e){
@@ -135,22 +114,9 @@ function handleBookmarkSubmit(){
             store.addItem(data);
             store.store.adding = false;
             render();
-        })
-    })
-}
-
-function handleExpandButton(){
-    $('#expand-button').on('click', function(e){
-        e.preventDefault();
-        renderExpandedView();
-    })
-}
-
-function renderExpandedView(){
-    page= '';
-    page += generateExpandedPage();
-    $('main').html(page);
-}
+        });
+    });
+};
 
 function render(){
     let bookmarksCall = store.store.bookmarks;
