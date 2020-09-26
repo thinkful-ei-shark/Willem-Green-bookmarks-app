@@ -3,7 +3,7 @@
     bookmarks: [],
     adding: false,
     error: null,
-    filter: 1
+    filter: 0
   }
 
 
