@@ -24,7 +24,7 @@ function generateMainPage(){
                     <option id="filter5" value="5">Show 5</option>
                 </select>
             </div>
-        <div class"item">
+        <div class="item">
             <button type="button" id="filter" class = "btn">Filter</button>
         </div>
         </form>
