@@ -124,6 +124,15 @@ function handleExpandButton(){
     });
 }
 
+function handleKeyboardInput(){
+    $('main').on('keydown','li', function(e){
+        if(e.which === 13){
+            e.preventDefault();
+            console.log('keycode functioning')
+        }
+    })
+}
+
 function handleDeleteButton(){
     $('main').on('click', '#delete', function(e){
         e.preventDefault();
@@ -185,6 +194,7 @@ function bindEventListeners(){
     handleExpandButton();
     handleDeleteButton();
     handleFilter();
+    handleKeyboardInput();
 }
 
 export default {
