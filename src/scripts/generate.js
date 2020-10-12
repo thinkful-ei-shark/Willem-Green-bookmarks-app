@@ -34,10 +34,11 @@ function generateMainPage(){
 
 function generateBookmarkItem(bookmark){
     let bookmarkTitle = `<span class ="item" >${bookmark.title}</span>`;
-    const expandedBookmark = `<li tabindex="0" class="ind-bookmark" data-item-id="${bookmark.id}">
+    const expandedBookmark = `<li class="ind-bookmark" data-item-id="${bookmark.id}">
     <div class="top-row group"
     <div>
-      ${bookmarkTitle}
+      <label for="expand-button"></label>
+      <button type="submit" id="expand-button" class="expand-button" name="expand-button">${bookmarkTitle}</button>
       <p class = "item">Rating: ${bookmark.rating}</p>
       </div>
       </div>
@@ -47,10 +48,11 @@ function generateBookmarkItem(bookmark){
       <button type = "submit" class ="btn "id="delete">Delete</button>
       </div>
     </li>`;
-    const regularBookmark = `<li tabindex="0" class="ind-bookmark" data-item-id="${bookmark.id}">
+    const regularBookmark = `<li class="ind-bookmark" data-item-id="${bookmark.id}">
     <div class="top-row group"
     <div>
-      ${bookmarkTitle}
+    <label for="expand-button"/>
+    <button type="submit" id="expand-button" class = "expand-button" name="expand-button">${bookmarkTitle}</button>
       <p class = "item">Rating: ${bookmark.rating}</p>
       </div>
       </div>
@@ -116,23 +118,13 @@ function getIdFromElement(item){
 }
 
 function handleExpandButton(){
-    $('main').on('click', 'li',function(e){
-        let listId = $(e.currentTarget).attr('data-item-id')
+    $('main').on('click', '#expand-button',function(e){
+        let listId = $(e.currentTarget).parent().parent().closest('li').attr('data-item-id')
         let itemToChange = store.findById(listId)
         itemToChange.expanded = !itemToChange.expanded;
         render();
     });
 }
-
-function handleKeyboardInput(){
-    $('main').on('keydown','li', function(e){
-        if(e.which === 13){
-            e.preventDefault();
-            console.log('keycode functioning')
-        }
-    })
-}
-
 function handleDeleteButton(){
     $('main').on('click', '#delete', function(e){
         e.preventDefault();
@@ -194,7 +186,6 @@ function bindEventListeners(){
     handleExpandButton();
     handleDeleteButton();
     handleFilter();
-    handleKeyboardInput();
 }
 
 export default {
