@@ -34,19 +34,32 @@ function generateMainPage(){
 
 function generateBookmarkItem(bookmark){
     let bookmarkTitle = `<span class ="item" >${bookmark.title}</span>`;
-    const bookmarkItem = `<li class="ind-bookmark" data-item-id="${bookmark.id}"><div class="top-row group"
+    const expandedBookmark = `<li tabindex="0" class="ind-bookmark" data-item-id="${bookmark.id}">
+    <div class="top-row group"
     <div>
       ${bookmarkTitle}
-      <p class = "item">${bookmark.rating}</p>
+      <p class = "item">Rating: ${bookmark.rating}</p>
       </div>
       </div>
-      <div class="bottom-row hidden">
+      <div class="bottom-row">
       <a href ="${bookmark.url}">Visit Site</a>
       <p>${bookmark.desc}</p>
       <button type = "submit" class ="btn "id="delete">Delete</button>
       </div>
     </li>`;
-    return bookmarkItem;
+    const regularBookmark = `<li tabindex="0" class="ind-bookmark" data-item-id="${bookmark.id}">
+    <div class="top-row group"
+    <div>
+      ${bookmarkTitle}
+      <p class = "item">Rating: ${bookmark.rating}</p>
+      </div>
+      </div>
+    </li>`
+    if(bookmark.expanded === true){
+        return expandedBookmark
+    } else {
+        return regularBookmark
+    }
 }
 
 function generateBookmarkString(bookmarkList){
@@ -104,9 +117,12 @@ function getIdFromElement(item){
 
 function handleExpandButton(){
     $('main').on('click', 'li',function(e){
-        $(this).children('.bottom-row').toggleClass('hidden');
+        let listId = $(e.currentTarget).attr('data-item-id')
+        let itemToChange = store.findById(listId)
+        itemToChange.expanded = !itemToChange.expanded;
+        render();
     });
-};
+}
 
 function handleDeleteButton(){
     $('main').on('click', '#delete', function(e){
@@ -144,6 +160,7 @@ function handleBookmarkSubmit(){
         let desc = $('#desc').val();
         api.postBookmark(name, urlName, rating, desc)
         .then((data)=> {
+            data.expanded = false;
             store.addItem(data);
             store.store.adding = false;
             render();
