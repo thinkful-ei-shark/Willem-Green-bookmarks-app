@@ -155,9 +155,15 @@ function filterBookmarks(bookmarks){
 function handleBookmarkSubmit(){
     $('main').on('submit', '#add-bookmark-form', function(e){
         e.preventDefault();
+        let rating = '';
         let urlName = $('#url').val();
         let name = $('#name').val();
-        let rating = $('#rating').val();
+        if($('#rating').val() === ''){
+            rating = '5';
+        } else {
+            rating = $('#rating').val();
+        }
+        
         let desc = $('#desc').val();
         api.postBookmark(name, urlName, rating, desc)
         .then((data)=> {
