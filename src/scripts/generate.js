@@ -43,7 +43,7 @@ function generateBookmarkItem(bookmark){
       </div>
       </div>
       <div class="bottom-row">
-      <a href ="${bookmark.url}">Visit Site</a>
+      <a href ="${bookmark.url}" target="_blank">Visit Site</a>
       <p>${bookmark.desc}</p>
       <button type = "submit" class ="btn "id="delete">Delete</button>
       </div>
@@ -97,14 +97,23 @@ function generateAddPage(){
 </div>
 <div class="item-column">  
   <label for = "rating">Rating</label>
-  <input type="text" placeholder="rating 1-5" name="rating" id="rating">
+  <select name="rating" class ="btn" id="rating">
+    <option id="filter1" value="1">1</option>
+    <option id="filter2" value="2">2</option>
+    <option id="filter3" value="3">3</option>
+    <option id="filter4" value="4">4</option>
+    <option id="filter5" value="5">5</option>
+  </select>
 </div>
 <div class="item-column">  
   <label for="desc">Description</label>
-  <textarea name="desc" id="desc" rows="4">No description</textarea>
+  <textarea name="desc" placeholder="Add description" id="desc" rows="4"></textarea>
 </div>
 <div class ="item-column">
-  <button type ="submit"class = "btn">Add Bookmark</button>
+  <button type ="submit" id="cancel-add" class = "btn">Cancel</button>
+  </div>
+<div class ="item-column">
+  <button type ="submit" class = "btn">Add Bookmark</button>
   </div>
 </form>
 </div>`
@@ -137,6 +146,14 @@ function handleDeleteButton(){
     });
 };
 
+function handleCancelButton(){
+    $('main').on('click', '#cancel-add', function(e){
+        e.preventDefault();
+        store.store.adding = false;
+        render();
+    })
+}
+
 function handleFilter(){
     $('main').on('click', '#filter', function(e){
         e.preventDefault();
@@ -155,15 +172,9 @@ function filterBookmarks(bookmarks){
 function handleBookmarkSubmit(){
     $('main').on('submit', '#add-bookmark-form', function(e){
         e.preventDefault();
-        let rating = '';
         let urlName = $('#url').val();
         let name = $('#name').val();
-        if($('#rating').val() === ''){
-            rating = '5';
-        } else {
-            rating = $('#rating').val();
-        }
-        
+        let rating = $('#rating').val();
         let desc = $('#desc').val();
         api.postBookmark(name, urlName, rating, desc)
         .then((data)=> {
@@ -192,6 +203,7 @@ function bindEventListeners(){
     handleExpandButton();
     handleDeleteButton();
     handleFilter();
+    handleCancelButton();
 }
 
 export default {
